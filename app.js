@@ -31,7 +31,21 @@ app.get("/", (req, res) => {
 });
 
 app.post("/", upload.single("file-to-upload"), (req, res) => {
-    res.redirect("/");
+    const fileSizeInStr = req.file.size.toString();
+    let result = fileSizeInStr;
+    
+    if(fileSizeInStr.length > 3){
+        result = fileSizeInStr.slice(0,-3) + " KB";
+    }
+    else if(fileSizeInStr.length > 6) {
+        result = fileSizeInStr.slice(0,-6) + " MB";
+    }
+    else if(fileSizeInStr.length > 9) {
+        result = fileSizeInStr.slice(0,-9) + " GB";
+    }
+    
+    res.json({ filename: req.file.originalname, size: result});
+    
 });
 
 const port = 3000;
